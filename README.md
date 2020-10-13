@@ -14,7 +14,9 @@ Todos os arquivos de **configuração** e aplicação estão dentro da pasta *sr
 As configurações de Banco de Dados e URL estão no arquivo *src/Config.php*
 
 É importante configurar corretamente a constante *BASE_DIR* seguido da pasta public, no exemplo de *localhost* a constante ficará assim:
-> const BASE_DIR = '/localhost/public'; **NÃO SE ESQUECER DA PASTA PUBLIC**
+> const BASE_DIR = '/localhost/public'; 
+
+**NÃO SE ESQUECER DA PASTA PUBLIC**
 > const BASE_DIR = '/**PastaDoProjeto**/public';
 
 ## Uso
