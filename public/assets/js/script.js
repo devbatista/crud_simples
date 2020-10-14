@@ -1,14 +1,12 @@
 $(document).ready(function () {
     carregarUsuarios();
+    carregarUsuariosRelatorio();
 });
 
 function carregarUsuarios() {
     $.ajax({
         url: window.origin + '/crud_simples/public/usuarios/listarTodos',
         dataType: 'json',
-        beforeSend: () => {
-
-        },
         success: (dados) => {
             let tabela = $('tbody[usuarios]');
             let html = '';
@@ -70,11 +68,13 @@ function deletarUsuario(id) {
         url: window.origin + '/crud_simples/public/usuarios/deletarUsuario',
         dataType: 'json',
         type: 'get',
-        data: {id: id},
+        data: {
+            id: id
+        },
         success: () => {
             alert('Usuário deletado com sucesso');
         }
-    }).done(function(){
+    }).done(function () {
         carregarUsuarios();
     })
 }
@@ -153,16 +153,116 @@ $('form[editUser]').on('submit', function (e) {
     carregarUsuarios();
 });
 
+function carregarUsuariosRelatorio() {
+    $.ajax({
+        url: window.origin + '/crud_simples/public/usuarios/listarTodos',
+        dataType: 'json',
+        success: (dados) => {
+            let select = $('select#relatorio');
+            let html = '<option value="none" disabled selected>Selecione um nome</option>';
+            select.html(function () {
+                $.each(dados, function (i, v) {
+                    html += '<option value="' + this.id + '">' + this.email + '</option>';
+                });
+                return html;
+            });
+        }
+    });
+}
+
 $('#alterarUsuario').keypress(function (e) {
-    console.log(e.which);
     if (e.which === 13) {
         $('form[editUser]').submit();
     }
 })
 
 $('#inserirUsuario').keypress(function (e) {
-    console.log(e.which);
     if (e.which === 13) {
         $('form[addUser]').submit();
     }
 })
+
+$('#enviarEmail').keypress(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+    }
+})
+
+$('select#relatorio').on('change', function () {
+    let id = $('select#relatorio').val();
+
+    $.ajax({
+        url: window.origin + '/crud_simples/public/usuarios/listarUsuario',
+        dataType: 'json',
+        type: 'get',
+        data: {
+            id: id
+        },
+        beforeSend: () => {
+            $('div[tabela]').removeClass('d-none');
+        },
+        success: (dados) => {
+            let html = '';
+            let relatorio = $('tbody#dadosRelatorio');
+            relatorio.html(function () {
+                html += '<tr>' +
+                    '<td id>' + dados.id + '</td>' +
+                    '<td nome>' + dados.nome + '</td>' +
+                    '<td email>' + dados.email + '</td>' +
+                    '</tr>';
+                return html;
+            });
+        }
+    });
+});
+
+$('#enviarEmail').on('hide.bs.modal', function () {
+    $('select#relatorio').val("none").attr('selected', true);
+    $('div[tabela]').addClass('d-none');
+});
+
+$('button[PHPMailer]').on('click', function (e) {
+    e.preventDefault();
+    let para = $('input[name=emailRelatorio]').val();
+    let id = $('tbody#dadosRelatorio').find('td[id]').html();
+    let nome = $('tbody#dadosRelatorio').find('td[nome]').html();
+    let email = $('tbody#dadosRelatorio').find('td[email]').html();
+
+    $.ajax({
+        url: window.origin + '/crud_simples/public/email/phpmailer',
+        dataType: 'json',
+        type: 'post',
+        data: {
+            id: id,
+            nome: nome,
+            email: email,
+            para: para
+        },
+        success: (retorno) => {
+            console.log(retorno);
+        }
+    });
+});
+
+$('button[mail]').on('click', function (e) {
+    e.preventDefault();
+    let para = $('input[name=emailRelatorio]').val();
+    let id = $('tbody#dadosRelatorio').find('td[id]').html();
+    let nome = $('tbody#dadosRelatorio').find('td[nome]').html();
+    let email = $('tbody#dadosRelatorio').find('td[email]').html();
+
+    $.ajax({
+        url: window.origin + '/crud_simples/public/email/mail',
+        dataType: 'json',
+        type: 'post',
+        data: {
+            id: id,
+            nome: nome,
+            email: email,
+            para: para
+        },
+        success: (retorno) => {
+            console.log(retorno);
+        }
+    });
+});
