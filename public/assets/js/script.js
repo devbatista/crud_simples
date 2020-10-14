@@ -219,6 +219,8 @@ $('select#relatorio').on('change', function () {
 $('#enviarEmail').on('hide.bs.modal', function () {
     $('select#relatorio').val("none").attr('selected', true);
     $('div[tabela]').addClass('d-none');
+    $('tbody#dadosRelatorio').html('');
+
 });
 
 $('button[PHPMailer]').on('click', function (e) {
@@ -239,7 +241,12 @@ $('button[PHPMailer]').on('click', function (e) {
             para: para
         },
         success: (retorno) => {
-            console.log(retorno);
+            if (retorno.code === 1) {
+                alert(retorno.msg);
+            } else {
+                alert(retorno.msg);
+                $('#enviarEmail').modal('hide');
+            }
         }
     });
 });
@@ -262,7 +269,12 @@ $('button[mail]').on('click', function (e) {
             para: para
         },
         success: (retorno) => {
-            console.log(retorno);
+            if (retorno.code === 1) {
+                alert(retorno.msg);
+            } else {
+                alert(retorno.msg);
+                $('#enviarEmail').modal('hide');
+            }
         }
     });
 });
