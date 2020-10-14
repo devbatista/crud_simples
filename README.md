@@ -69,3 +69,10 @@ O Back-end foi feito como webservices, enviando para o front-end dados em json, 
 
 O banco utilizado nesse projeto é um MySQL, o backup dele está contido no arquivo db.sql, que está na raiz do projeto.
 O nome do banco é: "**TEST**", em caso de utilização de outro nome, o arquivo de alteração é "*src/Config.php*"
+
+## ENVIO DE EMAILS
+
+É possível enviar um relatório com dados específicos por email, de duas formas:
+PHPMailer e mail().
+
+Para alterar as configurações de envio do email através do PHPMailer basta ir para */src/controller/EmailController* e colocar as informações de envio de acordo com o servidor de email específico (Este está configurado para a hostgator em um email de teste).
